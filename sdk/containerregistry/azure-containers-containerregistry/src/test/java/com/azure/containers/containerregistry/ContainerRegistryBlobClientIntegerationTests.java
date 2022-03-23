@@ -10,11 +10,13 @@ import com.azure.containers.containerregistry.models.OciBlobDescriptor;
 import com.azure.containers.containerregistry.models.OciManifest;
 import com.azure.containers.containerregistry.models.UploadBlobResult;
 import com.azure.containers.containerregistry.models.UploadManifestResult;
-
 import com.azure.containers.containerregistry.specialized.ContainerRegistryBlobClient;
 import com.azure.core.http.HttpClient;
+import com.azure.core.http.okhttp.OkHttpAsyncHttpClientBuilder;
 import com.azure.core.util.BinaryData;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -27,6 +29,7 @@ import static com.azure.containers.containerregistry.TestUtils.DISPLAY_NAME_WITH
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Execution(ExecutionMode.SAME_THREAD)
 public class ContainerRegistryBlobClientIntegerationTests extends ContainerRegistryClientsTestBase {
     private ContainerRegistryBlobClient client;
 
@@ -98,7 +101,8 @@ public class ContainerRegistryBlobClientIntegerationTests extends ContainerRegis
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void uploadManifest(HttpClient httpClient) {
-        client = getBlobClient("oci-artifact", httpClient);
+        HttpClient okHttp = new OkHttpAsyncHttpClientBuilder().build();
+        client = getBlobClient("oci-artifact", okHttp);
 
         try {
             uploadManifestPrerequisites();
@@ -116,7 +120,8 @@ public class ContainerRegistryBlobClientIntegerationTests extends ContainerRegis
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void downloadBlob(HttpClient httpClient) {
-        client = getBlobClient("oci-artifact", httpClient);
+        HttpClient okHttp = new OkHttpAsyncHttpClientBuilder().build();
+        client = getBlobClient("oci-artifact", okHttp);
         UploadBlobResult uploadResult = client.uploadBlob(configData);
         DownloadBlobResult downloadResult = client.downloadBlob(uploadResult.getDigest());
 
@@ -127,7 +132,8 @@ public class ContainerRegistryBlobClientIntegerationTests extends ContainerRegis
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void downloadManifest(HttpClient httpClient) {
-        client = getBlobClient("oci-artifact", httpClient);
+        HttpClient okHttp = new OkHttpAsyncHttpClientBuilder().build();
+        client = getBlobClient("oci-artifact", okHttp);
         uploadManifestPrerequisites();
         OciManifest manifest = createManifest();
         UploadManifestResult result = client.uploadManifest(manifest);

@@ -50,8 +50,8 @@
     </dependency>
      <dependency>
       <groupId>com.azure</groupId>
-      <artifactId>azure-core-http-netty</artifactId>
-      <version>1.11.8</version> <!-- {x-version-update;com.azure:azure-core-http-netty;dependency} -->
+      <artifactId>azure-core-http-okhttp</artifactId>
+      <version>1.7.10</version> <!-- {x-version-update;com.azure:azure-core-http-okhttp;dependency} -->
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
